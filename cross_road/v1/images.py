@@ -33,9 +33,9 @@ def list(ip, port, **params):
         req = requests.get(url=url, params=params)
         result = req.json()
         status = req.status_code
-        return dict(result=result, status=status)
+        return (status, '', result)
     except Exception, e:
-        return e
+        return (-1, e, '')
 
 
 def create(ip, port, iid, tag, created, repository, virtual_size):
@@ -67,9 +67,9 @@ def create(ip, port, iid, tag, created, repository, virtual_size):
         req = requests.post(url=url, data=load)
         result = req.json()
         status = req.status_code
-        return dict(result=result, status=status)
+        return (status, '', result)
     except Exception, e:
-        return e
+        return (-1, e, '')
 
 
 def get_image_by_pk(ip, port, pk):
@@ -89,9 +89,9 @@ def get_image_by_pk(ip, port, pk):
         req = requests.get(url=url)
         result = req.json()
         status = req.status_code
-        return dict(result=result, status=status)
+        return (status, '', result)
     except Exception, e:
-        return e
+        return (-1, e, '')
 
 
 def delete(ip, port, pk):
@@ -111,6 +111,6 @@ def delete(ip, port, pk):
         req = requests.put(url=url)
         result = req.json()
         status = req.status_code
-        return dict(result=result, status=status)
+        return (status, '', result)
     except Exception, e:
-        return e
+        return (-1, e, '')
