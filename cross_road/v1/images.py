@@ -7,64 +7,68 @@
 @Date: 2014.11.19
 """
 
+import simplejson as json
 import requests
 from exceptions import Exception
 
 API_VERSION = 'v1'
 
 
-def list(ip, port, **params):
+def list(api_ip, api_port, **params):
     """
-    列出images
+    列出所有镜像
 
-    :params:可选参数
-        all : 1/True/true or 0/False/false, default false
-        filters : a json encoded value of the filters (a map[string][]string) \
-            to process on the images list.
-    :return:DICT
-        {
-            result:LIST,
-            status:BOOL
-        }
+    :api_ip:
+    :api_port:
+    :**params: 可选查询参数
+        iid, tag, created, repository,
+        virtual_size, os_type,os_version
+    :returns: (status, msg, result)
+
     """
 
-    url = "http://" + ip + ":" + str(port) + "/" + API_VERSION + "/images"
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/images/"
     try:
         req = requests.get(url=url, params=params)
         result = req.json()
         status = req.status_code
         return (status, '', result)
     except Exception, e:
-        return (-1, e, '')
+        raise (-1, e, '')
 
 
-def create(ip, port, iid, tag, created, repository, virtual_size):
+def create(api_ip, api_port, iid='', tag='', created='', repository='',
+           virtual_size='', os_type='', os_version=''):
     """
     创建一个镜像
 
-    :ip:
-    :port:
+    :api_ip:
+    :api_port:
     :iid:
     :tag:
     :created:
-    :os_type:
-    :os_version:
     :repository:
     :virtual_size:
+    :os_type:
+    :os_version:
+    :returns:(status, msg, result)
 
-    :returns:
     """
 
-    url = "http://" + ip + ":" + str(port) + "/" + API_VERSION + \
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/images/create"
+    headers = {'content-type': 'application/json'}
+    load = {
+        'iid': iid,
+        'tag': tag,
+        'created': created,
+        'repository': repository,
+        'virtual_size': virtual_size,
+        'os_type': os_type,
+        'os_version': os_version}
     try:
-        load = {'iid': iid,
-                'created': created,
-                'tag': tag,
-                'repository': repository,
-                'virtual_size': virtual_size
-                }
-        req = requests.post(url=url, data=load)
+        req = requests.post(url=url, headers=headers, data=json.dumps(load))
         result = req.json()
         status = req.status_code
         return (status, '', result)
@@ -72,7 +76,7 @@ def create(ip, port, iid, tag, created, repository, virtual_size):
         return (-1, e, '')
 
 
-def get_image_by_pk(ip, port, pk):
+def get_image_by_pk(api_ip, api_port, pk):
     """
     通过pk值获取images
 
@@ -83,32 +87,10 @@ def get_image_by_pk(ip, port, pk):
 
     """
 
-    url = "http://" + ip + ":" + str(port) + "/" + API_VERSION + "/images/" \
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + "/images/" \
         + str(pk)
     try:
         req = requests.get(url=url)
-        result = req.json()
-        status = req.status_code
-        return (status, '', result)
-    except Exception, e:
-        return (-1, e, '')
-
-
-def delete(ip, port, pk):
-    """
-    删除指定pk值的image
-
-    :ip: TODO
-    :port: TODO
-    :pk: TODO
-    :returns: TODO
-
-    """
-
-    url = "http://" + ip + str(port) + "/" + API_VERSION + "/images/" + \
-        str(pk) + "/delete"
-    try:
-        req = requests.put(url=url)
         result = req.json()
         status = req.status_code
         return (status, '', result)
