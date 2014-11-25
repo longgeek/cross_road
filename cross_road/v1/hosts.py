@@ -29,7 +29,8 @@ def list(api_ip, api_port, **params):
 
     """
 
-    url = "http://" + api_ip + ":" + str(api_port) + "/hosts/"
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/hosts/"
     headers = {'content-type': 'application/json'}
     try:
         req = requests.get(url=url, params=params, headers=headers)
@@ -59,7 +60,8 @@ def create(api_ip, api_port, ip='', port='', image='', status='',
 
     """
 
-    url = "http://" + api_ip + ":" + str(api_port) + "/host/create"
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/host/create"
     headers = {'content-type': 'application/json'}
     load = {
         'ip': ip,
@@ -91,7 +93,8 @@ def get_host_by_pk(api_ip, api_port, pk):
 
     """
 
-    url = "http://" + api_ip + ":" + str(api_port) + "/hosts/" + str(pk) + "/"
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/hosts/" + str(pk) + "/"
     try:
         req = requests.get(url=url)
         result = req.json()
