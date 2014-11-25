@@ -94,7 +94,7 @@ def get_host_by_pk(api_ip, api_port, pk):
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
-        "/hosts/" + str(pk) + "/"
+        "/hosts/" + str(pk)
     try:
         req = requests.get(url=url)
         result = req.json()

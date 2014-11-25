@@ -30,7 +30,7 @@ def list(api_ip, api_port, **params):
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
-        "/containers"
+        "/containers/"
     try:
         req = requests.get(url=url, params=params)
         result = req.json()
@@ -103,7 +103,7 @@ def get_container_by_id(api_ip, api_port, id):
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
-        "/containers/" + str(id)
+        "/containers/" + str(id) + "/"
     try:
         req = requests.get(url=url)
         result = req.json()
