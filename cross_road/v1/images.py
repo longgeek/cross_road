@@ -35,7 +35,7 @@ def list(api_ip, api_port, **params):
         status = req.status_code
         return (status, '', result)
     except Exception, e:
-        raise (-1, e, '')
+        return (-1, e, '')
 
 
 def create(api_ip, api_port, iid='', tag='', created='', repository='',
