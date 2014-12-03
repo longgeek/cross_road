@@ -10,6 +10,7 @@
 coverage.xml
 pylint.txt
 reports/
+build/
 .environment_version
 .venv
 db.sqlite3
