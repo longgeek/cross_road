@@ -14,18 +14,27 @@ from exceptions import Exception
 API_VERSION = 'v1'
 
 
-def list(api_ip, api_port, **params):
+def hosts(api_ip, api_port, **params):
     """
-    列出所有主机
+    list hosts filtered by parameters
 
-    :ip:
-    :port:
+    :ip: STRING
+    :port: STRING
     :params: 可选查询参数
-        ip, port, image, status,
-        total_cpu, total_mem,
-        total_sys_disk, total_volume,
-        total_bandwidth
-    :returns: (status, msg, result)
+        ip: STRING
+        port: STRING
+        image: STRING
+        status: BOOL
+        total_cpu: INT          # Cores
+        total_mem: INT          # GB
+        total_sys_disk: INT     # GB
+        total_volume: INT       # GB
+        total_bandwidth: INT    # MB
+    :returns: (
+        status: INT  -1 : exception; other : status code
+        msg: STRING  '' : success; other : exception message
+        result: TODO
+    )
 
     """
 
@@ -45,18 +54,22 @@ def create(api_ip, api_port, ip='', port='', image='', status='',
            total_cpu='', total_mem='', total_sys_disk='',
            total_volume='', total_bandwidth=''):
     """
-    创建一个主机
+    create a host
 
-    :api_ip:
-    :api_port:
-    :image:
-    :status:
-    :total_cpu:
-    :total_mem:
-    :total_sys_disk:
-    :total_volume:
-    :total_bandwidth:
-    :returns: (status, msg, result)
+    :api_ip: STRING
+    :api_port: STRING
+    :image: STRING
+    :status: BOOL
+    :total_cpu: INT          # Cores
+    :total_mem: INT          # GB
+    :total_sys_disk: INT     # GB
+    :total_volume: INT       # GB
+    :total_bandwidth: INT    # MB
+    :returns: (
+        status: INT  -1 : exception; other : status code
+        msg: STRING  '' : success; other : exception message
+        result: TODO
+    )
 
     """
 
@@ -84,12 +97,16 @@ def create(api_ip, api_port, ip='', port='', image='', status='',
 
 def get_host_by_pk(api_ip, api_port, pk):
     """
-    根据pk获取主机信息
+    get host information by host pk
 
-    :ip:
-    :port:
-    :pk:
-    :returns: (status, msg, result)
+    :ip: STRING
+    :port: STRING
+    :pk: STRING
+    :returns: (
+        status: INT  -1 : exception; other : status code
+        msg: STRING  '' : success; other : exception message
+        result: TODO
+    )
 
     """
 
