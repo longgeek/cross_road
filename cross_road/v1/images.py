@@ -14,16 +14,36 @@ from exceptions import Exception
 API_VERSION = 'v1'
 
 
-def list(api_ip, api_port, **params):
+def images(api_ip, api_port, **params):
     """
-    列出所有镜像
+    list images filtered by parameters
 
-    :api_ip:
-    :api_port:
-    :**params: 可选查询参数
-        iid, tag, created, repository,
-        virtual_size, os_type,os_version
-    :returns: (status, msg, result)
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :**params: optional parameters
+        iid: STRING
+        tag: STRING
+        created: STRING
+        repository: STRING
+        virtual_size: STRING
+        os_type: STRING
+        os_version: STRING
+    :returns: (
+        status: INT    # -1: exception, other: status code
+        msg: STRING    # '': success, other: exception message
+        result: LIST
+    )
+    Example result format:
+        [
+            {u'created': u'222',
+              u'id': 1,
+              u'iid': u'86ce37374f40',
+              u'os_type': None,
+              u'os_version': None,
+              u'repository': u'ubuntu',
+              u'tag': u'latest',
+              u'virtual_size': u'192'}
+        ]
 
     """
 
@@ -41,19 +61,34 @@ def list(api_ip, api_port, **params):
 def create(api_ip, api_port, iid='', tag='', created='', repository='',
            virtual_size='', os_type='', os_version=''):
     """
-    创建一个镜像
+    create an image
 
-    :api_ip:
-    :api_port:
-    :iid:
-    :tag:
-    :created:
-    :repository:
-    :virtual_size:
-    :os_type:
-    :os_version:
-    :returns:(status, msg, result)
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :iid: STRING
+    :tag: STRING
+    :created: STRING
+    :repository: STRING
+    :virtual_size: STRING
+    :os_type: STRING
+    :os_version: STRING
+    :returns:(
+        status: INT    # -1 : exception; other : status code
+        msg: STRING    # '' : success; other : exception message
+        result: DICT
+    )
 
+    Example result format:
+        {
+            'repository': 'test',
+            'os_version': '',
+            'created': 'now',
+            'iid': '1',
+            'tag': 'test',
+            'os_type': None,
+            'virtual_size': '200',
+            'id': 5
+        }
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -78,12 +113,28 @@ def create(api_ip, api_port, iid='', tag='', created='', repository='',
 
 def get_image_by_pk(api_ip, api_port, pk):
     """
-    通过pk值获取images
+    get image information by image pk
 
-    :ip: TODO
-    :port: TODO
-    :pk: TODO
-    :returns: TODO
+    :ip: STRING
+    :port: STRING
+    :pk: STRING
+    :returns: (
+        status: INT   # -1 : exception; other : status code
+        msg: STRING   # '' : success; other : exception message
+        result: DICT
+    )
+
+    Example result format:
+        {
+            "id": 1,
+            "iid": "5506de2b643b",
+            "tag": "14.04.1",
+            "created": "3",
+            "os_type": null,
+            "os_version": null,
+            "repository": "ubuntu",
+            "virtual_size": "199"
+        }
 
     """
 

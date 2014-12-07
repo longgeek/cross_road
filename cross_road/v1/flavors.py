@@ -15,14 +15,42 @@ from exceptions import Exception
 API_VERSION = 'v1'
 
 
-def list(api_ip, api_port):
+def flavors(api_ip, api_port):
     """
-    列出所有flavor
+    list all flavors
 
-    :api_ip:
-    :api_port:
-    :returns: (satatus, msg, result)
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :returns: (
+        status: INT   # -1 : exception; other : status code
+        msg: STRING   # '' : success; other : exception message
+        result: DICT
+    )
 
+    Example result format:
+        {
+            '1': {
+                     'bandwidth': 512,
+                     'cpu': 1,
+                     'mem': 128,
+                     'name': u'tiny',
+                     'sys_disk': 5120,
+                     'volume': 0},
+            '2': {
+                     'bandwidth': 1024,
+                     'cpu': 1,
+                     'mem': 256,
+                     'name': u'small',
+                     'sys_disk': 10240,
+                     'volume': 0},
+            '3': {
+                     'bandwidth': 1024,
+                     'cpu': 1,
+                     'mem': 512,
+                     'name': u'standard',
+                     'sys_disk': 10240,
+                     'volume': 0}
+        }
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -36,19 +64,33 @@ def list(api_ip, api_port):
         return (-1, e, '')
 
 
-def get_flavor_by_id(api_ip, api_port, id):
+def get_flavor_by_id(api_ip, api_port, db_id):
     """
-    根据id获取flavor
+    get flavor information filtered by flavor_id
 
-    :api_ip:
-    :api_port:
-    :id:
-    :returns: (status, msg, result)
+    :api_ip: STRING
+    :api_port: STRING
+    :db_id: STRING
+    :returns: (
+        status: INT   # -1 : exception; other : status code
+        msg: STRING   # '' : success; other : exception message
+        result: DICT
+    )
+
+    Example result format:
+        {
+            'bandwidth': 512,
+            'cpu': 1,
+            'mem': 128,
+            'name': u'tiny',
+            'sys_disk': 5120,
+            'volume': 0
+        }
 
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
-        "/flavors/" + str(id)
+        "/flavors/" + str(db_id)
     try:
         req = requests.get(url=url)
         result = req.json()
