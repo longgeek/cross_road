@@ -375,9 +375,7 @@ def excute(api_ip, api_port, db_id='', command=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/exec"
     headers = {'content-type': 'application/json'}
-    load = {
-        'db_id': db_id,
-        'command': command}
+    load = {'command': command}
     try:
         req = requests.post(url=url, headers=headers, data=json.dumps(load))
         result = req.json()
@@ -504,6 +502,56 @@ def top(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/top"
     try:
         req = requests.get(url=url)
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, '', result)
+    except Exception, e:
+        return (-1, e, '')
+
+
+def console(api_ip, api_port, db_id='', command=''):
+    """
+    console container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :command: STRING
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT
+    )
+
+    Example result format:
+        Success:
+            {
+                "id": "10",
+                "cid": "779bfb2bebb079ae80f7686c642cb83df9ae
+                        b51b3cd139fc050860f362def2ed",
+                "host": "192.168.8.8",
+                "console": {
+                    "/bin/bash": {
+                        "private_port": 4301,
+                        "public_port": 49187
+                    }
+                },
+            }
+
+        Failure:
+            {"detail": STRING}
+
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/console"
+    headers = {'content-type': 'application/json'}
+    load = {'command': command}
+    try:
+        req = requests.post(url=url, headers=headers, data=json.dumps(load))
         result = req.json()
         status = req.status_code
         if status == 200:
