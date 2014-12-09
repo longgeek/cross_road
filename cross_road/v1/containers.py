@@ -512,7 +512,7 @@ def top(api_ip, api_port, db_id):
         return (-1, e, '')
 
 
-def console(api_ip, api_port, db_id='', command=''):
+def console(api_ip, api_port, db_id='', command='', username=''):
     """
     console container
 
@@ -520,6 +520,7 @@ def console(api_ip, api_port, db_id='', command=''):
     :api_port: INT/STRING
     :db_id: STRING
     :command: STRING
+    :username: STRING
     :returns: (
         status: INT,    # -1: exception, other: status code
         msg: STRING,    # '': success, other: exception message
@@ -533,6 +534,7 @@ def console(api_ip, api_port, db_id='', command=''):
                 "cid": "779bfb2bebb079ae80f7686c642cb83df9ae
                         b51b3cd139fc050860f362def2ed",
                 "host": "192.168.8.8",
+                "username": "longgeek",
                 "console": {
                     "/bin/bash": {
                         "private_port": 4301,
@@ -549,7 +551,7 @@ def console(api_ip, api_port, db_id='', command=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/console"
     headers = {'content-type': 'application/json'}
-    load = {'command': command}
+    load = {'command': command, 'username': username}
     try:
         req = requests.post(url=url, headers=headers, data=json.dumps(load))
         result = req.json()
@@ -557,6 +559,6 @@ def console(api_ip, api_port, db_id='', command=''):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
