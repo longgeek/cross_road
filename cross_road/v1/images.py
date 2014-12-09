@@ -53,7 +53,10 @@ def images(api_ip, api_port, **params):
         req = requests.get(url=url, params=params)
         result = req.json()
         status = req.status_code
-        return (status, '', result)
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
