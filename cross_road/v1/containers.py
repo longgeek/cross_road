@@ -73,7 +73,7 @@ def containers(api_ip, api_port, **params):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -151,7 +151,7 @@ def create(api_ip, api_port, cid='', name='',
         if status == 201:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -199,7 +199,7 @@ def get_container_by_id(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -234,7 +234,7 @@ def delete(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -273,7 +273,7 @@ def stop(api_ip, api_port, db_id, t=''):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -309,7 +309,7 @@ def start(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -345,7 +345,7 @@ def restart(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -383,7 +383,7 @@ def excute(api_ip, api_port, db_id='', command=''):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -417,7 +417,7 @@ def pause(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -451,7 +451,7 @@ def unpause(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
@@ -507,7 +507,7 @@ def top(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, '', result)
+            return (status, result, '')
     except Exception, e:
         return (-1, e, '')
 
