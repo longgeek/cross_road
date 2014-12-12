@@ -38,7 +38,7 @@ def containers(api_ip, api_port, **params):
     :returns: (
         status: INT,            # -1: exception; other: status code
         msg: STRING,            # '': success; other: exception message
-        result: LIST or STRING  # success:return LIST;failure: return DICT
+        result: LIST or STRING  # success:return LIST;failure: return STRING
     )
 
     Example result format:
@@ -72,7 +72,7 @@ def containers(api_ip, api_port, **params):
         req = requests.get(
             url=url,
             params=params,
-            timeout=(5, 10))  # connect timeout 3s, read timeout 10s
+            timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -82,7 +82,7 @@ def containers(api_ip, api_port, **params):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def create(api_ip, api_port, cid='', name='',
@@ -111,7 +111,7 @@ def create(api_ip, api_port, cid='', name='',
     :returns: (
         status: INT    # -1: exception, other: status code
         msg: STRING    # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING   # success:return DICT; failure:return STRING
     )
     Example result format:
         Success:
@@ -159,7 +159,7 @@ def create(api_ip, api_port, cid='', name='',
             url=url,
             headers=headers,
             data=json.dumps(load),
-            timeout=(5, 10))  # connect timeout 3s, read timeout 10s
+            timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 201:
@@ -169,7 +169,7 @@ def create(api_ip, api_port, cid='', name='',
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def get_container_by_id(api_ip, api_port, db_id):
@@ -182,7 +182,7 @@ def get_container_by_id(api_ip, api_port, db_id):
     :returns: (
         status: INT    #-1 : exception, other : status code
         msg: STRING    #'' : success, other : exception message
-        result: DICT
+        result: DICT or STRING # success:return DICT; fail: return STRING
     )
     Example result format:
         Success:
@@ -212,7 +212,7 @@ def get_container_by_id(api_ip, api_port, db_id):
     try:
         req = requests.get(
             url=url,
-            timeout=(5, 10))  # connect timeout 3s, read timeout 10s
+            timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -222,7 +222,7 @@ def get_container_by_id(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def delete(api_ip, api_port, db_id):
@@ -235,7 +235,7 @@ def delete(api_ip, api_port, db_id):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -249,7 +249,8 @@ def delete(api_ip, api_port, db_id):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/delete"
     try:
-        req = requests.delete(url=url)
+        # connect timeout and read timeout
+        req = requests.delete(url=url, timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -257,7 +258,7 @@ def delete(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def stop(api_ip, api_port, db_id, t=''):
@@ -272,7 +273,7 @@ def stop(api_ip, api_port, db_id, t=''):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail: return STRING
     )
 
     Example result format:
@@ -288,7 +289,11 @@ def stop(api_ip, api_port, db_id, t=''):
     headers = {'content-type': 'application/json'}
     load = {'t': t}
     try:
-        req = requests.post(url=url, data=json.dumps(load), headers=headers)
+        req = requests.post(
+            url=url,
+            data=json.dumps(load),
+            headers=headers,
+            timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -296,7 +301,7 @@ def stop(api_ip, api_port, db_id, t=''):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def start(api_ip, api_port, db_id):
@@ -309,7 +314,7 @@ def start(api_ip, api_port, db_id):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success: return DICT; fail:return STRING
     )
 
     Example result format:
@@ -324,7 +329,8 @@ def start(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/start"
     headers = {'content-type': 'application/json'}
     try:
-        req = requests.post(url=url, headers=headers)
+        # connect timeout and read timeout
+        req = requests.post(url=url, headers=headers, timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -332,7 +338,7 @@ def start(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def restart(api_ip, api_port, db_id):
@@ -345,7 +351,7 @@ def restart(api_ip, api_port, db_id):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -360,7 +366,8 @@ def restart(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/restart"
     headers = {'content-type': 'application/json'}
     try:
-        req = requests.post(url=url, headers=headers)
+        # connect timeout and read timeout
+        req = requests.post(url=url, headers=headers, timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -368,7 +375,7 @@ def restart(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def excute(api_ip, api_port, db_id='', command=''):
@@ -382,7 +389,7 @@ def excute(api_ip, api_port, db_id='', command=''):
     :returns: (
         status: INT,    # -1: exception, other: status code
         msg: STRING,    # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -398,7 +405,11 @@ def excute(api_ip, api_port, db_id='', command=''):
     headers = {'content-type': 'application/json'}
     load = {'command': command}
     try:
-        req = requests.post(url=url, headers=headers, data=json.dumps(load))
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(load),
+            timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -406,7 +417,7 @@ def excute(api_ip, api_port, db_id='', command=''):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def pause(api_ip, api_port, db_id):
@@ -419,7 +430,7 @@ def pause(api_ip, api_port, db_id):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -432,7 +443,8 @@ def pause(api_ip, api_port, db_id):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/pause"
     try:
-        req = requests.post(url=url)
+        # connect timeout and read timeout
+        req = requests.post(url=url, timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -440,7 +452,7 @@ def pause(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def unpause(api_ip, api_port, db_id):
@@ -453,7 +465,7 @@ def unpause(api_ip, api_port, db_id):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -466,7 +478,8 @@ def unpause(api_ip, api_port, db_id):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/unpause"
     try:
-        req = requests.post(url=url)
+        # connect timeout and read timeout
+        req = requests.post(url=url, timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -474,7 +487,7 @@ def unpause(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def top(api_ip, api_port, db_id):
@@ -487,7 +500,7 @@ def top(api_ip, api_port, db_id):
     :returns: (
         status: INT,            # -1: exception, other: status code
         msg: STRING,            # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING  # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -522,7 +535,8 @@ def top(api_ip, api_port, db_id):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/top"
     try:
-        req = requests.get(url=url)
+        # connect timeout and read timeout
+        req = requests.get(url=url, timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -530,7 +544,7 @@ def top(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
 
 
 def console(api_ip, api_port, db_id='', command='', username=''):
@@ -540,12 +554,12 @@ def console(api_ip, api_port, db_id='', command='', username=''):
     :api_ip: STRING
     :api_port: INT/STRING
     :db_id: STRING
-    :command: STRING
+    :command: json LIST
     :username: STRING
     :returns: (
         status: INT,    # -1: exception, other: status code
         msg: STRING,    # '': success, other: exception message
-        result: DICT
+        result: DICT or STRING # success:return DICT; fail:return STRING
     )
 
     Example result format:
@@ -574,7 +588,11 @@ def console(api_ip, api_port, db_id='', command='', username=''):
     headers = {'content-type': 'application/json'}
     load = {'command': command, 'username': username}
     try:
-        req = requests.post(url=url, headers=headers, data=json.dumps(load))
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(load),
+            timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -582,4 +600,33 @@ def console(api_ip, api_port, db_id='', command='', username=''):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e, '')
+        return (-1, e.message, '')
+
+
+if __name__ == '__main__':
+    import pprint
+    ip = '192.168.8.231'
+    port = '80'
+    db_id = '90'
+    username = 'longgeek'
+    command = '["/bin/bash"]'
+    print '--------list containers--------'
+    pprint.pprint(containers(ip, port))
+    print '--------get container by id--------'
+    pprint.pprint(get_container_by_id(ip, port, db_id))
+    print '--------list processes--------'
+    pprint.pprint(top(ip, port, db_id))
+    print '--------excute a command--------'
+    pprint.pprint(excute(ip, port, db_id=db_id, command=command))
+    print '--------console--------'
+    pprint.pprint(console(ip, port, db_id, command=command, username=username))
+    print '--------stop a container--------'
+    pprint.pprint(stop(ip, port, db_id))
+    print '--------start a container--------'
+    pprint.pprint(start(ip, port, db_id))
+    print '--------restart a container--------'
+    pprint.pprint(restart(ip, port, db_id))
+    print '--------pause a container--------'
+    pprint.pprint(pause(ip, port, db_id))
+    print '--------unpause a container--------'
+    pprint.pprint(unpause(ip, port, db_id))
