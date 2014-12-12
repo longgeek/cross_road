@@ -38,7 +38,7 @@ def containers(api_ip, api_port, **params):
     :returns: (
         status: INT,            # -1: exception; other: status code
         msg: STRING,            # '': success; other: exception message
-        result: LIST or DICT    # success:return LIST;failure: return DICT
+        result: LIST or STRING  # success:return LIST;failure: return DICT
     )
 
     Example result format:
@@ -63,19 +63,24 @@ def containers(api_ip, api_port, **params):
                 }
             ]
         Failure:
-            {"detail": STRING}
+            STRING
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/"
     try:
-        req = requests.get(url=url, params=params)
+        req = requests.get(
+            url=url,
+            params=params,
+            timeout=(5, 10))  # connect timeout 3s, read timeout 10s
         result = req.json()
         status = req.status_code
         if status == 200:
             return (0, '', result)
+        elif status == 404:
+            return (0, '', [])
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -129,7 +134,7 @@ def create(api_ip, api_port, cid='', name='',
             }
 
         Failure:
-            {"detail": STRING}
+            STRING
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -150,13 +155,19 @@ def create(api_ip, api_port, cid='', name='',
         'flavor_id': flavor_id,
         'json_extra': json_extra}
     try:
-        req = requests.post(url=url, headers=headers, data=json.dumps(load))
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(load),
+            timeout=(5, 10))  # connect timeout 3s, read timeout 10s
         result = req.json()
         status = req.status_code
         if status == 201:
             return (0, '', result)
+        elif status == 404:
+            return (0, '', {})
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -193,19 +204,23 @@ def get_container_by_id(api_ip, api_port, db_id):
                 "json_extra": ""
             }
         Failure:
-            {"detail": STRING}
+            STRING
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/"
     try:
-        req = requests.get(url=url)
+        req = requests.get(
+            url=url,
+            timeout=(5, 10))  # connect timeout 3s, read timeout 10s
         result = req.json()
         status = req.status_code
         if status == 200:
             return (0, '', result)
+        elif status == 404:
+            return (0, '', [])
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -227,7 +242,7 @@ def delete(api_ip, api_port, db_id):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
 
@@ -240,7 +255,7 @@ def delete(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -264,7 +279,7 @@ def stop(api_ip, api_port, db_id, t=''):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
 
@@ -279,7 +294,7 @@ def stop(api_ip, api_port, db_id, t=''):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -301,7 +316,7 @@ def start(api_ip, api_port, db_id):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
 
@@ -315,7 +330,7 @@ def start(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -337,7 +352,7 @@ def restart(api_ip, api_port, db_id):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
 
@@ -351,7 +366,7 @@ def restart(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -374,7 +389,7 @@ def excute(api_ip, api_port, db_id='', command=''):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
 
@@ -389,7 +404,7 @@ def excute(api_ip, api_port, db_id='', command=''):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -411,7 +426,7 @@ def pause(api_ip, api_port, db_id):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -423,7 +438,7 @@ def pause(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -445,7 +460,7 @@ def unpause(api_ip, api_port, db_id):
         Success:
             {"detail": STRING}
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -457,7 +472,7 @@ def unpause(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -501,7 +516,7 @@ def top(api_ip, api_port, db_id):
             ]
         }
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -513,7 +528,7 @@ def top(api_ip, api_port, db_id):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
 
@@ -550,7 +565,7 @@ def console(api_ip, api_port, db_id='', command='', username=''):
             }
 
         Failure:
-            {"detail": STRING}
+            STRING
 
     """
 
@@ -565,6 +580,6 @@ def console(api_ip, api_port, db_id='', command='', username=''):
         if status == 200:
             return (0, '', result)
         else:
-            return (status, result, '')
+            return (status, result['detail'], '')
     except Exception, e:
         return (-1, e, '')
