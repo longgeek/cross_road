@@ -34,6 +34,7 @@ def containers(api_ip, api_port, **params):
         created: STRING
         hostname: STRING
         flavor_id: STRING
+        json_extra: STRING
     :returns: (
         status: INT,            # -1: exception; other: status code
         msg: STRING,            # '': success; other: exception message
@@ -57,7 +58,8 @@ def containers(api_ip, api_port, **params):
                     "command": "/bin/bash",
                     "created": "1417874473",
                     "hostname": "bda51967884c",
-                    "flavor_id": "1"
+                    "flavor_id": "1",
+                    "json_extra": ""
                 }
             ]
         Failure:
@@ -82,7 +84,7 @@ def create(api_ip, api_port, cid='', name='',
            host='', size='', ports='',
            image='', status='', user_id='',
            command='', created='',
-           hostname='', flavor_id=''):
+           hostname='', flavor_id='', json_extra=''):
     """
     create a container
 
@@ -100,6 +102,7 @@ def create(api_ip, api_port, cid='', name='',
     :created: STRING
     :hostname: STRING
     :flavor_id: STRING 1/2/3
+    :json_extra: STRING
     :returns: (
         status: INT    # -1: exception, other: status code
         msg: STRING    # '': success, other: exception message
@@ -121,7 +124,8 @@ def create(api_ip, api_port, cid='', name='',
                 "command": "/bin/bash",
                 "created": "1417874473",
                 "hostname": "bda51967884c",
-                "flavor_id": "1"
+                "flavor_id": "1",
+                "json_extra": "",
             }
 
         Failure:
@@ -143,7 +147,8 @@ def create(api_ip, api_port, cid='', name='',
         'command': command,
         'created': created,
         'hostname': hostname,
-        'flavor_id': flavor_id}
+        'flavor_id': flavor_id,
+        'json_extra': json_extra}
     try:
         req = requests.post(url=url, headers=headers, data=json.dumps(load))
         result = req.json()
@@ -184,7 +189,8 @@ def get_container_by_id(api_ip, api_port, db_id):
                 "command": "/bin/bash",
                 "created": "1417874473",
                 "hostname": "bda51967884c",
-                "flavor_id": "1"
+                "flavor_id": "1",
+                "json_extra": ""
             }
         Failure:
             {"detail": STRING}
