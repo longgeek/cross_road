@@ -82,7 +82,7 @@ def containers(api_ip, api_port, **params):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def create(api_ip, api_port, cid='', name='',
@@ -164,12 +164,10 @@ def create(api_ip, api_port, cid='', name='',
         status = req.status_code
         if status == 201:
             return (0, '', result)
-        elif status == 404:
-            return (0, '', {})
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def get_container_by_id(api_ip, api_port, db_id):
@@ -217,12 +215,10 @@ def get_container_by_id(api_ip, api_port, db_id):
         status = req.status_code
         if status == 200:
             return (0, '', result)
-        elif status == 404:
-            return (0, '', [])
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def delete(api_ip, api_port, db_id):
@@ -258,7 +254,7 @@ def delete(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def stop(api_ip, api_port, db_id, t=''):
@@ -301,7 +297,7 @@ def stop(api_ip, api_port, db_id, t=''):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def start(api_ip, api_port, db_id):
@@ -338,7 +334,7 @@ def start(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def restart(api_ip, api_port, db_id):
@@ -375,7 +371,7 @@ def restart(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def excute(api_ip, api_port, db_id='', command=''):
@@ -417,7 +413,7 @@ def excute(api_ip, api_port, db_id='', command=''):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def pause(api_ip, api_port, db_id):
@@ -452,7 +448,7 @@ def pause(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def unpause(api_ip, api_port, db_id):
@@ -487,7 +483,7 @@ def unpause(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def top(api_ip, api_port, db_id):
@@ -544,7 +540,7 @@ def top(api_ip, api_port, db_id):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 def console(api_ip, api_port, db_id='', command='', username=''):
@@ -600,33 +596,34 @@ def console(api_ip, api_port, db_id='', command='', username=''):
         else:
             return (status, result['detail'], '')
     except Exception, e:
-        return (-1, e.message, '')
+        return (-1, str(e.message), '')
 
 
 if __name__ == '__main__':
     import pprint
-    ip = '192.168.8.231'
+    ip = '192.168.8.180'
     port = '80'
     db_id = '90'
     username = 'longgeek'
     command = '["/bin/bash"]'
     print '--------list containers--------'
     pprint.pprint(containers(ip, port))
-    print '--------get container by id--------'
-    pprint.pprint(get_container_by_id(ip, port, db_id))
-    print '--------list processes--------'
-    pprint.pprint(top(ip, port, db_id))
-    print '--------excute a command--------'
-    pprint.pprint(excute(ip, port, db_id=db_id, command=command))
-    print '--------console--------'
-    pprint.pprint(console(ip, port, db_id, command=command, username=username))
-    print '--------stop a container--------'
-    pprint.pprint(stop(ip, port, db_id))
-    print '--------start a container--------'
-    pprint.pprint(start(ip, port, db_id))
-    print '--------restart a container--------'
-    pprint.pprint(restart(ip, port, db_id))
-    print '--------pause a container--------'
-    pprint.pprint(pause(ip, port, db_id))
-    print '--------unpause a container--------'
-    pprint.pprint(unpause(ip, port, db_id))
+    # print '--------get container by id--------'
+    # pprint.pprint(get_container_by_id(ip, port, db_id))
+    # print '--------list processes--------'
+    # pprint.pprint(top(ip, port, db_id))
+    # print '--------excute a command--------'
+    # pprint.pprint(excute(ip, port, db_id=db_id, command=command))
+    # print '--------console--------'
+    # pprint.pprint(console(ip, port, db_id, command=command,
+    # username=username))
+    # print '--------stop a container--------'
+    # pprint.pprint(stop(ip, port, db_id))
+    # print '--------start a container--------'
+    # pprint.pprint(start(ip, port, db_id))
+    # print '--------restart a container--------'
+    # pprint.pprint(restart(ip, port, db_id))
+    # print '--------pause a container--------'
+    # pprint.pprint(pause(ip, port, db_id))
+    # print '--------unpause a container--------'
+    # pprint.pprint(unpause(ip, port, db_id))
