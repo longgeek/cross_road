@@ -599,6 +599,113 @@ def console(api_ip, api_port, db_id='', command='', username=''):
         return (-1, str(e.message), '')
 
 
+def files_write(api_ip, api_port, db_id='', files='', username=''):
+    """
+    write files of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :files: json DICT
+    :username: STRING
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "id": "10",
+                "cid": "779bfb2bebb079ae80f7686c642cb83df9ae
+                        b51b3cd139fc050860f362def2ed",
+                "host": "192.168.8.8",
+                "username": "longgeek",
+                "files":{
+                   "/opt/python/django_project/urls.py": "file content",
+                   "/opt/python/django_project/views.py": "file content",
+                }
+            }
+
+        Failure:
+            STRING
+
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/files/write"
+    headers = {'content-type': 'application/json'}
+    load = {'files': files, 'username': username}
+    try:
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(load),
+            timeout=(3.05, 10))  # connect timeout and read timeout
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
+def files_read(api_ip, api_port, db_id='', files='', username=''):
+    """
+    read files of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :files: json LIST
+    :username: STRING
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "id": "10",
+                "cid": "779bfb2bebb079ae80f7686c642cb83df9ae
+                        b51b3cd139fc050860f362def2ed",
+                "host": "192.168.8.8",
+                "username": "longgeek",
+                "files":{
+                   "/opt/python/django_project/urls.py": "file content",
+                   "/opt/python/django_project/views.py": "file content",
+                }
+            }
+
+        Failure:
+            STRING
+
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/files/read"
+    headers = {'content-type': 'application/json'}
+    load = {'files': files, 'username': username}
+    try:
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(load),
+            timeout=(3.05, 10))  # connect timeout and read timeout
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
 if __name__ == '__main__':
     import pprint
     ip = '192.168.8.180'
