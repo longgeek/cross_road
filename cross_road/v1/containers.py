@@ -706,6 +706,53 @@ def files_read(api_ip, api_port, db_id='', files='', username=''):
     except Exception, e:
         return (-1, str(e.message), '')
 
+
+def console_url(api_ip, api_port, db_id='', command='', username=''):
+    """
+    console url container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :command: json LIST
+    :username: STRING
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "/bin/bash": "51d962f4446e125073234337.console.coderpie.com"
+            }
+
+        Failure:
+            STRING
+
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/console"
+    headers = {'content-type': 'application/json'}
+    load = {'command': command, 'username': username}
+    try:
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(load),
+            timeout=(3.05, 10))  # connect timeout and read timeout
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
 if __name__ == '__main__':
     import pprint
     ip = '192.168.8.180'
