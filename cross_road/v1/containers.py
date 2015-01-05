@@ -55,7 +55,7 @@ def containers(api_ip, api_port, **params):
                     "ports": "",
                     "status": "Up 36 minutes",
                     "user_id": "2",
-                    "command": "/bin/bash",
+                    "command": "bash",
                     "created": "1417874473",
                     "hostname": "bda51967884c",
                     "flavor_id": "1",
@@ -126,7 +126,7 @@ def create(api_ip, api_port, cid='', name='',
                 "ports": "",
                 "status": "Up 41 minutes",
                 "user_id": "2",
-                "command": "/bin/bash",
+                "command": "bash",
                 "created": "1417874473",
                 "hostname": "bda51967884c",
                 "flavor_id": "1",
@@ -195,7 +195,7 @@ def get_container_by_id(api_ip, api_port, db_id):
                 "ports": "",
                 "status": "Up 6 minutes",
                 "user_id": "2",
-                "command": "/bin/bash",
+                "command": "bash",
                 "created": "1417874473",
                 "hostname": "bda51967884c",
                 "flavor_id": "1",
@@ -567,7 +567,9 @@ def console(api_ip, api_port, db_id='', command='', username=''):
                 "host": "192.168.8.8",
                 "username": "longgeek",
                 "console": {
-                    "/bin/bash": {
+                    "bash": {
+                        "url": "http://1b37f57f3bd3151917edca3d
+                                .console.example.com",
                         "private_port": 4301,
                         "public_port": 49187
                     }
@@ -725,7 +727,7 @@ def console_url(api_ip, api_port, db_id='', command='', username=''):
     Example result format:
         Success:
             {
-                "/bin/bash": "51d962f4446e125073234337.console.coderpie.com"
+                "bash": "51d962f4446e125073234337.console.coderpie.com"
             }
 
         Failure:
@@ -759,7 +761,7 @@ if __name__ == '__main__':
     port = '80'
     db_id = '90'
     username = 'longgeek'
-    command = '["/bin/bash"]'
+    command = '["bash"]'
     print '--------list containers--------'
     pprint.pprint(containers(ip, port))
     # print '--------get container by id--------'
