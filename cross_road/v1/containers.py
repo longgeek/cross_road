@@ -331,6 +331,8 @@ def start(api_ip, api_port, db_id):
         status = req.status_code
         if status == 200:
             return (0, '', result)
+        elif status == 404:
+            return (5, result['detail'], '')
         else:
             return (status, result['detail'], '')
     except Exception, e:
