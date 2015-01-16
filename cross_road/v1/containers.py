@@ -88,7 +88,7 @@ def containers(api_ip, api_port, **params):
 def create(api_ip, api_port, cid='', name='',
            host='', size='', ports='',
            image='', status='', user_id='',
-           command='', created='',
+           command='', created='', tag='',
            hostname='', flavor_id='', json_extra=''):
     """
     create a container
