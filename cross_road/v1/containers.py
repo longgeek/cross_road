@@ -89,7 +89,7 @@ def create(api_ip, api_port, cid='', name='',
            host='', size='', ports='',
            image='', status='', user_id='',
            command='', created='', tag='',
-           hostname='', flavor_id='', json_extra=''):
+           hostname='', flavor_id='', json_extra='', container_name=''):
     """
     create a container
 
@@ -153,7 +153,8 @@ def create(api_ip, api_port, cid='', name='',
         'created': created,
         'hostname': hostname,
         'flavor_id': flavor_id,
-        'json_extra': json_extra}
+        'json_extra': json_extra,
+        'container_name': container_name}
     try:
         req = requests.post(
             url=url,
