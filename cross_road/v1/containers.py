@@ -89,7 +89,8 @@ def create(api_ip, api_port, cid='', name='',
            host='', size='', ports='',
            image='', status='', user_id='',
            command='', created='', tag='',
-           hostname='', flavor_id='', json_extra='', container_name=''):
+           hostname='', username='', flavor_id='',
+           json_extra='', container_name=''):
     """
     create a container
 
@@ -140,7 +141,7 @@ def create(api_ip, api_port, cid='', name='',
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/create"
     headers = {'content-type': 'application/json'}
-    load = {
+    data = {
         'cid': cid,
         'name': name,
         'host': host,
@@ -152,6 +153,7 @@ def create(api_ip, api_port, cid='', name='',
         'command': command,
         'created': created,
         'hostname': hostname,
+        'username': username,
         'flavor_id': flavor_id,
         'json_extra': json_extra,
         'container_name': container_name}
@@ -159,7 +161,7 @@ def create(api_ip, api_port, cid='', name='',
         req = requests.post(
             url=url,
             headers=headers,
-            data=json.dumps(load),
+            data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
@@ -284,11 +286,11 @@ def stop(api_ip, api_port, db_id, t=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/stop"
     headers = {'content-type': 'application/json'}
-    load = {'t': t}
+    data = {'t': t}
     try:
         req = requests.post(
             url=url,
-            data=json.dumps(load),
+            data=json.dumps(data),
             headers=headers,
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
@@ -301,7 +303,7 @@ def stop(api_ip, api_port, db_id, t=''):
         return (-1, str(e.message), '')
 
 
-def start(api_ip, api_port, db_id):
+def start(api_ip, api_port, db_id, username):
     """
     start a container
 
@@ -325,9 +327,13 @@ def start(api_ip, api_port, db_id):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/start"
     headers = {'content-type': 'application/json'}
+    data = {'username': username}
     try:
         # connect timeout and read timeout
-        req = requests.post(url=url, headers=headers, timeout=(3.05, 10))
+        req = requests.post(url=url,
+                            headers=headers,
+                            data=json.dumps(data),
+                            timeout=(3.05, 10))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -402,12 +408,12 @@ def excute(api_ip, api_port, db_id='', command=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/exec"
     headers = {'content-type': 'application/json'}
-    load = {'command': command}
+    data = {'command': command}
     try:
         req = requests.post(
             url=url,
             headers=headers,
-            data=json.dumps(load),
+            data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
@@ -587,12 +593,12 @@ def console(api_ip, api_port, db_id='', command='', username=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/console"
     headers = {'content-type': 'application/json'}
-    load = {'command': command, 'username': username}
+    data = {'command': command, 'username': username}
     try:
         req = requests.post(
             url=url,
             headers=headers,
-            data=json.dumps(load),
+            data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
@@ -641,12 +647,12 @@ def files_write(api_ip, api_port, db_id='', files='', username=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/files/write"
     headers = {'content-type': 'application/json'}
-    load = {'files': files, 'username': username}
+    data = {'files': files, 'username': username}
     try:
         req = requests.post(
             url=url,
             headers=headers,
-            data=json.dumps(load),
+            data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
@@ -695,12 +701,12 @@ def files_read(api_ip, api_port, db_id='', files='', username=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/files/read"
     headers = {'content-type': 'application/json'}
-    load = {'files': files, 'username': username}
+    data = {'files': files, 'username': username}
     try:
         req = requests.post(
             url=url,
             headers=headers,
-            data=json.dumps(load),
+            data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
@@ -741,12 +747,12 @@ def console_url(api_ip, api_port, db_id='', command='', username=''):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/console"
     headers = {'content-type': 'application/json'}
-    load = {'command': command, 'username': username}
+    data = {'command': command, 'username': username}
     try:
         req = requests.post(
             url=url,
             headers=headers,
-            data=json.dumps(load),
+            data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
