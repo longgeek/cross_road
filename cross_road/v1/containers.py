@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 """
-@Author: Frank
-@Email: frank@thstack.com
+@Author: Longgeek
+@Email: longgeek@thstack.com
 @Date: 2014.11.19
 """
 
@@ -133,7 +133,6 @@ def create(api_ip, api_port, cid='', name='',
                 "flavor_id": "1",
                 "json_extra": "",
             }
-
         Failure:
             STRING
     """
@@ -224,6 +223,40 @@ def get_container_by_id(api_ip, api_port, db_id):
         return (-1, str(e.message), '')
 
 
+def inspect(api_ip, api_port, db_id):
+    """
+    inspect a container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :returns: (
+        status: INT,            # -1: exception, other: status code
+        msg: STRING,            # '': success, other: exception message
+        result: DICT or STRING  # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {"detail": STRING}
+        Failure:
+            STRING
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/inspect"
+    try:
+        req = requests.get(url=url, timeout=(3.05, 10))
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
 def delete(api_ip, api_port, db_id):
     """
     delete a container
@@ -242,7 +275,6 @@ def delete(api_ip, api_port, db_id):
             {"detail": STRING}
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -280,7 +312,6 @@ def stop(api_ip, api_port, db_id, t=''):
             {"detail": STRING}
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -321,7 +352,6 @@ def start(api_ip, api_port, db_id, username):
             {"detail": STRING}
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -364,7 +394,6 @@ def restart(api_ip, api_port, db_id):
             {"detail": STRING}
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -383,7 +412,7 @@ def restart(api_ip, api_port, db_id):
         return (-1, str(e.message), '')
 
 
-def excute(api_ip, api_port, db_id='', command=''):
+def excute(api_ip, api_port, db_id='', command='', wait=False):
     """
     excute a command inside a running container
 
@@ -391,6 +420,8 @@ def excute(api_ip, api_port, db_id='', command=''):
     :api_port: INT/STRING
     :db_id: STRING
     :command: STRING
+    :wait: BOOL
+    :django_project_info: DICT
     :returns: (
         status: INT,    # -1: exception, other: status code
         msg: STRING,    # '': success, other: exception message
@@ -402,13 +433,12 @@ def excute(api_ip, api_port, db_id='', command=''):
             {"detail": STRING}
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/exec"
     headers = {'content-type': 'application/json'}
-    data = {'command': command}
+    data = {'command': command, 'wait': wait}
     try:
         req = requests.post(
             url=url,
@@ -443,8 +473,8 @@ def pause(api_ip, api_port, db_id):
             {"detail": STRING}
         Failure:
             STRING
-
     """
+
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/pause"
     try:
@@ -478,8 +508,8 @@ def unpause(api_ip, api_port, db_id):
             {"detail": STRING}
         Failure:
             STRING
-
     """
+
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/unpause"
     try:
@@ -535,8 +565,8 @@ def top(api_ip, api_port, db_id):
         }
         Failure:
             STRING
-
     """
+
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/top"
     try:
@@ -584,10 +614,8 @@ def console(api_ip, api_port, db_id='', command='', username=''):
                     }
                 },
             }
-
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -638,10 +666,8 @@ def files_write(api_ip, api_port, db_id='', files='', username=''):
                    "/opt/python/django_project/views.py": "file content",
                 }
             }
-
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -692,10 +718,8 @@ def files_read(api_ip, api_port, db_id='', files='', username=''):
                    "/opt/python/django_project/views.py": "file content",
                 }
             }
-
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -708,6 +732,141 @@ def files_read(api_ip, api_port, db_id='', files='', username=''):
             headers=headers,
             data=json.dumps(data),
             timeout=(3.05, 10))  # connect timeout and read timeout
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
+def files_delete(api_ip, api_port, db_id='', files=[]):
+    """
+    delete dirs of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :files: LIST
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "/tmp/my.txt": "deleted"
+                "/tmp/test.py": "does not exist",
+            }
+        Failure:
+            STRING
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/files/delete"
+    headers = {'content-type': 'application/json'}
+    data = {"files": files}
+    try:
+        req = requests.delete(
+            url=url,
+            headers=headers,
+            data=json.dumps(data),
+            timeout=(3.05, 10)
+        )
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
+def dirs_create(api_ip, api_port, db_id='', dirs=[]):
+    """
+    read files of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :dirs: LIST
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "/tmp/dir1": "exist",
+                "/tmp/dir2": "created"
+            }
+        Failure:
+            STRING
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/dirs/create"
+    headers = {'content-type': 'application/json'}
+    data = {"dirs": dirs}
+    try:
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(data),
+            timeout=(3.05, 10)
+        )
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
+def dirs_delete(api_ip, api_port, db_id='', dirs=[]):
+    """
+    delete dirs of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :dirs: LIST
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "/tmp/dir1": "does not exist",
+                "/tmp/dir2": "deleted"
+            }
+        Failure:
+            STRING
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/dirs/delete"
+    headers = {'content-type': 'application/json'}
+    data = {"dirs": dirs}
+    try:
+        req = requests.delete(
+            url=url,
+            headers=headers,
+            data=json.dumps(data),
+            timeout=(3.05, 10)
+        )
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -738,10 +897,8 @@ def console_url(api_ip, api_port, db_id='', command='', username=''):
             {
                 "bash": "51d962f4446e125073234337.console.coderpie.com"
             }
-
         Failure:
             STRING
-
     """
 
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
@@ -762,33 +919,3 @@ def console_url(api_ip, api_port, db_id='', command='', username=''):
             return (status, result['detail'], '')
     except Exception, e:
         return (-1, str(e.message), '')
-
-
-if __name__ == '__main__':
-    import pprint
-    ip = '192.168.8.180'
-    port = '80'
-    db_id = '90'
-    username = 'longgeek'
-    command = '["bash"]'
-    print '--------list containers--------'
-    pprint.pprint(containers(ip, port))
-    # print '--------get container by id--------'
-    # pprint.pprint(get_container_by_id(ip, port, db_id))
-    # print '--------list processes--------'
-    # pprint.pprint(top(ip, port, db_id))
-    # print '--------excute a command--------'
-    # pprint.pprint(excute(ip, port, db_id=db_id, command=command))
-    # print '--------console--------'
-    # pprint.pprint(console(ip, port, db_id, command=command,
-    # username=username))
-    # print '--------stop a container--------'
-    # pprint.pprint(stop(ip, port, db_id))
-    # print '--------start a container--------'
-    # pprint.pprint(start(ip, port, db_id))
-    # print '--------restart a container--------'
-    # pprint.pprint(restart(ip, port, db_id))
-    # print '--------pause a container--------'
-    # pprint.pprint(pause(ip, port, db_id))
-    # print '--------unpause a container--------'
-    # pprint.pprint(unpause(ip, port, db_id))

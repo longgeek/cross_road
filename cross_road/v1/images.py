@@ -141,8 +141,8 @@ def get_image_by_pk(api_ip, api_port, pk):
 
     """
 
-    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + "/images/" \
-        + str(pk)
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + \
+          API_VERSION + "/images/" + str(pk)
     try:
         req = requests.get(url=url)
         result = req.json()
