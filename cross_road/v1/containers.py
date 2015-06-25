@@ -638,6 +638,59 @@ def console(api_ip, api_port, db_id='', command='', username=''):
         return (-1, str(e.message), '')
 
 
+def files_list(api_ip, api_port, db_id='', dirs=[]):
+    """
+    list files of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :dirs: LIST
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "/tmp/path": [
+                      {"type":"directory","name":"/tmp/path/","contents":[
+                        {"type":"directory","name":"dir_A","contents":[
+                        ]},
+                        {"type":"directory","name":"dir_B","contents":[
+                        ]},
+                        {"type":"file","name":"file1.txt"}
+                      ]},
+                      {"type":"report","directories":2,"files":1}
+                    ],
+            }
+        Failure:
+            STRING
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/files/list"
+    headers = {'content-type': 'application/json'}
+    data = {"dirs": dirs}
+    try:
+        req = requests.get(
+            url=url,
+            headers=headers,
+            data=json.dumps(data),
+            timeout=(3.05, 10)
+        )
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
+
+
 def files_write(api_ip, api_port, db_id='', files='', username=''):
     """
     write files of the container
