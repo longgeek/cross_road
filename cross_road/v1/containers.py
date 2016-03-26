@@ -972,3 +972,53 @@ def console_url(api_ip, api_port, db_id='', command='', username=''):
             return (status, result['detail'], '')
     except Exception, e:
         return (-1, str(e.message), '')
+
+
+def host_exec(api_ip, api_port, db_id='', commands='', username=''):
+    """
+    write files of the container
+
+    :api_ip: STRING
+    :api_port: INT/STRING
+    :db_id: STRING
+    :commands: json LIST
+    :username: STRING
+    :returns: (
+        status: INT,    # -1: exception, other: status code
+        msg: STRING,    # '': success, other: exception message
+        result: DICT or STRING # success:return DICT; fail:return STRING
+    )
+
+    Example result format:
+        Success:
+            {
+                "id": "10",
+                "cid": "779bfb2bebb079ae80f7686c642cb83df9ae
+                        b51b3cd139fc050860f362def2ed",
+                "host": "192.168.8.8",
+                "username": "longgeek",
+                "commands": {
+                }
+            }
+        Failure:
+            STRING
+    """
+
+    url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
+        "/containers/" + str(db_id) + "/host/exec"
+    headers = {'content-type': 'application/json'}
+    data = {'commands': commands, 'username': username}
+    try:
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=json.dumps(data),
+            timeout=(3.05, 10))  # connect timeout and read timeout
+        result = req.json()
+        status = req.status_code
+        if status == 200:
+            return (0, '', result)
+        else:
+            return (status, result['detail'], '')
+    except Exception, e:
+        return (-1, str(e.message), '')
