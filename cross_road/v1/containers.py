@@ -72,7 +72,7 @@ def containers(api_ip, api_port, **params):
         req = requests.get(
             url=url,
             params=params,
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -161,7 +161,7 @@ def create(api_ip, api_port, cid='', name='',
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 201:
@@ -212,7 +212,7 @@ def get_container_by_id(api_ip, api_port, db_id):
     try:
         req = requests.get(
             url=url,
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -246,7 +246,7 @@ def inspect(api_ip, api_port, db_id):
     url = "http://" + api_ip + ":" + str(api_port) + "/" + API_VERSION + \
         "/containers/" + str(db_id) + "/inspect"
     try:
-        req = requests.get(url=url, timeout=(3.05, 10))
+        req = requests.get(url=url, timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -281,7 +281,7 @@ def delete(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/delete"
     try:
         # connect timeout and read timeout
-        req = requests.delete(url=url, timeout=(3.05, 10))
+        req = requests.delete(url=url, timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -323,7 +323,7 @@ def stop(api_ip, api_port, db_id, t=''):
             url=url,
             data=json.dumps(data),
             headers=headers,
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -363,7 +363,7 @@ def start(api_ip, api_port, db_id, username):
         req = requests.post(url=url,
                             headers=headers,
                             data=json.dumps(data),
-                            timeout=(3.05, 10))
+                            timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -401,7 +401,7 @@ def restart(api_ip, api_port, db_id):
     headers = {'content-type': 'application/json'}
     try:
         # connect timeout and read timeout
-        req = requests.post(url=url, headers=headers, timeout=(3.05, 10))
+        req = requests.post(url=url, headers=headers, timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -444,7 +444,7 @@ def excute(api_ip, api_port, db_id='', command='', wait=False):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -479,7 +479,7 @@ def pause(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/pause"
     try:
         # connect timeout and read timeout
-        req = requests.post(url=url, timeout=(3.05, 10))
+        req = requests.post(url=url, timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -514,7 +514,7 @@ def unpause(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/unpause"
     try:
         # connect timeout and read timeout
-        req = requests.post(url=url, timeout=(3.05, 10))
+        req = requests.post(url=url, timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -571,7 +571,7 @@ def top(api_ip, api_port, db_id):
         "/containers/" + str(db_id) + "/top"
     try:
         # connect timeout and read timeout
-        req = requests.get(url=url, timeout=(3.05, 10))
+        req = requests.get(url=url, timeout=(3.05, 30))
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -627,7 +627,7 @@ def console(api_ip, api_port, db_id='', command='', username=''):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -679,7 +679,7 @@ def files_list(api_ip, api_port, db_id='', dirs=[]):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10)
+            timeout=(3.05, 30)
         )
         result = req.json()
         status = req.status_code
@@ -732,7 +732,7 @@ def files_write(api_ip, api_port, db_id='', files='', username=''):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -784,7 +784,7 @@ def files_read(api_ip, api_port, db_id='', files='', username=''):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -828,7 +828,7 @@ def files_delete(api_ip, api_port, db_id='', files=[]):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10)
+            timeout=(3.05, 30)
         )
         result = req.json()
         status = req.status_code
@@ -873,7 +873,7 @@ def dirs_create(api_ip, api_port, db_id='', dirs=[]):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10)
+            timeout=(3.05, 30)
         )
         result = req.json()
         status = req.status_code
@@ -918,7 +918,7 @@ def dirs_delete(api_ip, api_port, db_id='', dirs=[]):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10)
+            timeout=(3.05, 30)
         )
         result = req.json()
         status = req.status_code
@@ -963,7 +963,7 @@ def console_url(api_ip, api_port, db_id='', command='', username=''):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -1013,7 +1013,7 @@ def host_exec(api_ip, api_port, db_id='', commands='', username=''):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
@@ -1063,7 +1063,7 @@ def host_fdcheck(api_ip, api_port, db_id='', fds='', username=''):
             url=url,
             headers=headers,
             data=json.dumps(data),
-            timeout=(3.05, 10))  # connect timeout and read timeout
+            timeout=(3.05, 30))  # connect timeout and read timeout
         result = req.json()
         status = req.status_code
         if status == 200:
